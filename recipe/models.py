@@ -30,12 +30,13 @@ class RecipeIngredient(models.Model):
         ('l', 'l'),
         ('tl', 'TL'),
         ('el', 'EL'),
+        ('pieces', 'Stück'),
     ))
     note = models.TextField(null=True, blank=True)
 
 
 class Recipe(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=80)
     tags = models.ManyToManyField(Tag, related_name='recipes')
     ingredients = models.ManyToManyField(Ingredient, through=RecipeIngredient)
 

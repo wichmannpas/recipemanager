@@ -1,0 +1,18 @@
+{% extends 'recipe/base.html' %}
+{% block titleprefix %}Recipes – {% endblock titleprefix %}
+
+{% block body %}
+  <h1>
+    Recipes
+  </h1>
+  <ul>
+    {% for recipe in recipes %}
+      <li>
+        <a href="{% url 'recipe:view_recipe' recipe.pk %}">{{ recipe.name }}</a>
+        {% for tag in recipe.tags.all %}
+          <span class="chip">{{ tag }}</span>
+        {% endfor %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock body %}

@@ -1,0 +1,29 @@
+{% extends 'recipe/base.html' %}
+{% load humanize %}
+{% load markdownify %}
+{% block titleprefix %}Recipes – {% endblock titleprefix %}
+
+{% block body %}
+  <h1>
+    {{ recipe.name }}
+  </h1>
+  <p>
+    {% for tag in recipe.tags.all %}
+      <span class="chip">{{ tag }}</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ recipe.notes|markdownify|linebreaks }}
+  </p>
+  <ul>
+    {% for ingredient in recipe.recipe_ingredients.all %}
+      <li>
+        {{ ingredient.amount|floatformat|intcomma }}&thinsp;{{ ingredient.get_unit_display }}
+        {{ ingredient.ingredient.name }}
+        {% if ingredient.notes %}
+          <p>{{ ingredient.notes }}</p>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock body %}
