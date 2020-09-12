@@ -1,7 +1,7 @@
 {% extends 'recipe/base.html' %}
 {% load humanize %}
 {% load markdownify %}
-{% block titleprefix %}Recipes – {% endblock titleprefix %}
+{% block titleprefix %}{{ recipe.name }} – {% endblock titleprefix %}
 
 {% block body %}
   <h1>
