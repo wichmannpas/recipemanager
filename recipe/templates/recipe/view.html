@@ -12,7 +12,7 @@
       <span class="chip">{{ tag }}</span>
     {% endfor %}
   </p>
-  {{ recipe.notes|markdownify|linebreaks }}
+  {{ recipe.notes|markdownify }}
   <ul>
     {% for ingredient in recipe.recipe_ingredients.all %}
       <li>
