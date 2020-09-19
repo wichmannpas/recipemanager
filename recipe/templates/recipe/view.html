@@ -18,8 +18,8 @@
       <li>
         {{ ingredient.amount|floatformat|intcomma }}&thinsp;{{ ingredient.get_unit_display }}
         {{ ingredient.ingredient.name }}
-        {% if ingredient.notes %}
-          <p>{{ ingredient.notes }}</p>
+        {% if ingredient.note %}
+          <div>{{ ingredient.note|markdownify }}</div>
         {% endif %}
       </li>
     {% endfor %}
