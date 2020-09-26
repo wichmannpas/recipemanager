@@ -1,4 +1,5 @@
 from datetime import date
+from decimal import Decimal
 
 from django.db import models
 
@@ -40,6 +41,9 @@ class Recipe(models.Model):
     tags = models.ManyToManyField(Tag, related_name='recipes')
     ingredients = models.ManyToManyField(Ingredient, through=RecipeIngredient)
 
+    display_factor = models.DecimalField(
+        max_digits=10, decimal_places=3, default=Decimal(1))
+
     notes = models.TextField(null=True, blank=True)
 
     def __str__(self) -> str:
@@ -47,6 +51,10 @@ class Recipe(models.Model):
 
     def tag_str(self) -> str:
         return ', '.join(tag.name for tag in self.tags.all())
+
+    @property
+    def show_display_factor(self) -> bool:
+        return self.display_factor != 1
 
 
 class RecipeInstance(models.Model):

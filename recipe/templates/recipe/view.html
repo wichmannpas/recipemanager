@@ -1,6 +1,8 @@
 {% extends 'recipe/base.html' %}
 {% load humanize %}
 {% load markdownify %}
+{% load spectre_css %}
+{% load recipe %}
 {% block titleprefix %}{{ recipe.name }} – {% endblock titleprefix %}
 
 {% block body %}
@@ -13,10 +15,24 @@
     {% endfor %}
   </p>
   {{ recipe.notes|markdownify }}
+
+  <form method="POST" action="{% url 'recipe:view_recipe' recipe.pk %}">
+    {% csrf_token %}
+    {% render_form factor_form %}
+    <button type="submit"
+            class="btn btn-primary btn-block">
+      Aktualisieren
+    </button>
+  </form>
   <ul>
     {% for ingredient in recipe.recipe_ingredients.all %}
       <li>
-        {{ ingredient.amount|floatformat|intcomma }}&thinsp;{{ ingredient.get_unit_display }}
+        {% if recipe.show_display_factor %}
+          {{ ingredient.amount|apply_display_factor:recipe|floatformat|intcomma }}&thinsp;{{ ingredient.get_unit_display }}
+          ({{ ingredient.amount|floatformat|intcomma }}&thinsp;{{ ingredient.get_unit_display }})
+        {% else %}
+          {{ ingredient.amount|floatformat|intcomma }}&thinsp;{{ ingredient.get_unit_display }}
+        {% endif %}
         {{ ingredient.ingredient.name }}
         {% if ingredient.note %}
           {{ ingredient.note|markdownify }}
