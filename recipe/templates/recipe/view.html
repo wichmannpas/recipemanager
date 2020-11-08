@@ -75,8 +75,10 @@
             <td{% if forloop.counter0 > 0 %} class="text-right"{% endif %}>
               {% if column is None %}
                 <span class="text-red text-bold">--</span>
-              {% else %}
+              {% else if forloop.counter0 > 0 %}
                 {{ column }}
+              {% else %}
+                {{ column|floatformat:-2 }}
               {% endif %}
             </td>
           {% endfor %}
