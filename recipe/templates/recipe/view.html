@@ -20,6 +20,7 @@
     {% csrf_token %}
     {% render_form factor_form %}
     <button type="submit"
+            name="display-factor-form"
             class="btn btn-primary btn-block">
       Aktualisieren
     </button>
@@ -28,10 +29,13 @@
     {% for ingredient in recipe.recipe_ingredients.all %}
       <li>
         {% if recipe.show_display_factor %}
-          {{ ingredient.amount|apply_display_factor:recipe|floatformat|intcomma }}&thinsp;{{ ingredient.get_unit_display }}
-          ({{ ingredient.amount|floatformat|intcomma }}&thinsp;{{ ingredient.get_unit_display }})
+          {{ ingredient.amount|apply_display_factor:recipe|floatformat|intcomma }}&thinsp;
+          {{ ingredient.get_unit_display }}
+          ({{ ingredient.amount|floatformat|intcomma }}&thinsp;
+          {{ ingredient.get_unit_display }})
         {% else %}
-          {{ ingredient.amount|floatformat|intcomma }}&thinsp;{{ ingredient.get_unit_display }}
+          {{ ingredient.amount|floatformat|intcomma }}&thinsp;
+          {{ ingredient.get_unit_display }}
         {% endif %}
         {{ ingredient.ingredient.name }}
         {% if ingredient.note %}
@@ -40,4 +44,64 @@
       </li>
     {% endfor %}
   </ul>
+
+  <form method="POST" action="{% url 'recipe:view_recipe' recipe.pk %}">
+    {% csrf_token %}
+    {% render_form portions_form %}
+    <button type="submit"
+            name="portions-form"
+            class="btn btn-primary btn-block">
+      Aktualisieren
+    </button>
+  </form>
+
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>
+          Zutat
+        </th>
+        {% for nut, verbose_nut in nutritional %}
+          <th class="text-right">
+            {{ verbose_nut }}
+          </th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for ingredient_nut in recipe.ingredient_nutritional_values %}
+        <tr>
+          {% for column in ingredient_nut %}
+            <td{% if forloop.counter0 > 0 %} class="text-right"{% endif %}>
+              {% if column is None %}
+                <span class="text-red text-bold">--</span>
+              {% else %}
+                {{ column }}
+              {% endif %}
+            </td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <th>Gesamt</th>
+        {% for val, incomplete in recipe.nutritional_values %}
+          <td class="text-right{% if incomplete %} text-bold text-red{% endif %}">
+            {{ val|floatformat:-2 }}
+          </td>
+        {% endfor %}
+      </tr>
+      {% if recipe.portions != 1 %}
+        <tr>
+          <th>Pro Portion</th>
+          {% for val, incomplete in recipe.nutritional_values_portion %}
+            <td class="text-right{% if incomplete %} text-bold text-red{% endif %}">
+              {{ val|floatformat:-2 }}
+            </td>
+          {% endfor %}
+        </tr>
+      {% endif %}
+    </tfoot>
+  </table>
 {% endblock body %}

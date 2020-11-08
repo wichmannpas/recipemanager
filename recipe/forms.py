@@ -9,3 +9,11 @@ class RecipeFactorForm(forms.ModelForm):
         fields = (
             'display_factor',
         )
+
+
+class RecipePortionsForm(forms.ModelForm):
+    class Meta:
+        model = Recipe
+        fields = (
+            'portions',
+        )
