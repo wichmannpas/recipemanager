@@ -47,7 +47,7 @@ for nutritional_name, verbose_nutritional_name in NUTRITIONAL:
     for unit, verbose_unit in UNITS:
         Ingredient.add_to_class(
             '_'.join((nutritional_name, unit)),
-            models.DecimalField(max_digits=10, decimal_places=3, null=True, blank=True)
+            models.DecimalField(max_digits=15, decimal_places=8, null=True, blank=True)
         )
 
 
