@@ -52,11 +52,16 @@ for nutritional_name, verbose_nutritional_name in NUTRITIONAL:
 
 
 class RecipeIngredient(models.Model):
+    class Meta:
+        ordering = (
+            'order_no',
+        )
     recipe = models.ForeignKey(
         'Recipe', on_delete=models.CASCADE, related_name='recipe_ingredients')
     ingredient = models.ForeignKey(
         Ingredient, on_delete=models.CASCADE, related_name='recipe_ingredients')
 
+    order_no = models.FloatField(default=1)
     amount = models.DecimalField(max_digits=10, decimal_places=3)
     unit = models.CharField(max_length=10, default='g', choices=UNITS)
     note = models.TextField(null=True, blank=True)
