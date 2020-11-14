@@ -50,6 +50,7 @@ class RecipeAdmin(admin.ModelAdmin):
     list_display = (
         'name',
         'tag_str',
+        'view_count',
     )
     list_filter = (
         'tags',

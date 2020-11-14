@@ -8,7 +8,7 @@ from .models import NUTRITIONAL, Recipe, RecipeIngredient, Tag
 
 def list_recipes(request):
     return render(request, 'recipe/index.html', {
-        'recipes': Recipe.objects.order_by('name').prefetch_related(
+        'recipes': Recipe.objects.order_by('-view_count', 'name').prefetch_related(
             Prefetch('tags', Tag.objects.order_by('name'))
         ),
     })
@@ -36,6 +36,9 @@ def view_recipe(request, pk: int):
                 return redirect('recipe:view_recipe', recipe.pk)
         else:
             return HttpResponseBadRequest('invalid form')
+
+    recipe.view_count += 1
+    recipe.save(update_fields=('view_count',))
 
     return render(request, 'recipe/view.html', {
         'recipe': recipe,

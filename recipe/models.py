@@ -68,6 +68,10 @@ class RecipeIngredient(models.Model):
 
 
 class Recipe(models.Model):
+    class Meta:
+        ordering = (
+            '-view_count',
+        )
     name = models.CharField(max_length=80)
     tags = models.ManyToManyField(Tag, related_name='recipes')
     ingredients = models.ManyToManyField(Ingredient, through=RecipeIngredient)
@@ -79,6 +83,8 @@ class Recipe(models.Model):
         max_digits=10, decimal_places=3, default=Decimal(1))
 
     notes = models.TextField(null=True, blank=True)
+
+    view_count = models.IntegerField(default=0)
 
     def __str__(self) -> str:
         return self.name
