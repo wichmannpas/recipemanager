@@ -14,39 +14,45 @@
       <span class="chip">{{ tag }}</span>
     {% endfor %}
   </p>
-  {{ recipe.notes|markdownify }}
 
-  <form method="POST" action="{% url 'recipe:view_recipe' recipe.pk %}">
-    {% csrf_token %}
-    {% render_form factor_form %}
-    <button type="submit"
-            name="display-factor-form"
-            class="btn btn-primary btn-block">
-      Aktualisieren
-    </button>
-  </form>
-  <div class="form-horizontal">
-    {% for ingredient in recipe.recipe_ingredients.all %}
-      <div class="form-group">
-        <label class="form-checkbox">
-          <input type="checkbox" />
-          <i class="form-icon"></i>
-          {% if recipe.show_display_factor %}
-            {{ ingredient.amount|apply_display_factor:recipe|floatformat|intcomma }}&thinsp;
-            {{ ingredient.get_unit_display }}
-            ({{ ingredient.amount|floatformat|intcomma }}&thinsp;
-            {{ ingredient.get_unit_display }})
-          {% else %}
-            {{ ingredient.amount|floatformat|intcomma }}&thinsp;
-            {{ ingredient.get_unit_display }}
-          {% endif %}
-          {{ ingredient.ingredient.name }}
-          {% if ingredient.note %}
-            {{ ingredient.note|markdownify }}
-          {% endif %}
-        </label>
+  <div class="columns">
+    <div class="column col-6 col-lg-12">
+      {{ recipe.notes|markdownify }}
+    </div>
+    <div class="column col-6 col-lg-12">
+      <form method="POST" action="{% url 'recipe:view_recipe' recipe.pk %}">
+        {% csrf_token %}
+        {% render_form factor_form %}
+        <button type="submit"
+                name="display-factor-form"
+                class="btn btn-primary btn-block">
+          Aktualisieren
+        </button>
+      </form>
+      <div class="form-horizontal">
+        {% for ingredient in recipe.recipe_ingredients.all %}
+          <div class="form-group">
+            <label class="form-checkbox">
+              <input type="checkbox" />
+              <i class="form-icon"></i>
+              {% if recipe.show_display_factor %}
+                {{ ingredient.amount|apply_display_factor:recipe|floatformat|intcomma }}&thinsp;
+                {{ ingredient.get_unit_display }}
+                ({{ ingredient.amount|floatformat|intcomma }}&thinsp;
+                {{ ingredient.get_unit_display }})
+              {% else %}
+                {{ ingredient.amount|floatformat|intcomma }}&thinsp;
+                {{ ingredient.get_unit_display }}
+              {% endif %}
+              {{ ingredient.ingredient.name }}
+              {% if ingredient.note %}
+                {{ ingredient.note|markdownify }}
+              {% endif %}
+            </label>
+          </div>
+        {% endfor %}
       </div>
-    {% endfor %}
+    </div>
   </div>
 
   <form method="POST" action="{% url 'recipe:view_recipe' recipe.pk %}">
