@@ -84,6 +84,7 @@ class Recipe(models.Model):
 
     notes = models.TextField(null=True, blank=True)
 
+    last_viewed = models.DateTimeField(null=True, blank=True)
     view_count = models.IntegerField(default=0)
 
     def __str__(self) -> str:

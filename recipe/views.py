@@ -1,6 +1,9 @@
+from datetime import timedelta
+
 from django.db.models import Prefetch
 from django.http import HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 
 from .forms import RecipeFactorForm, RecipePortionsForm
 from .models import NUTRITIONAL, Recipe, RecipeIngredient, Tag
@@ -37,8 +40,13 @@ def view_recipe(request, pk: int):
         else:
             return HttpResponseBadRequest('invalid form')
 
-    recipe.view_count += 1
-    recipe.save(update_fields=('view_count',))
+    now = timezone.now()
+    update_fields = ['last_viewed']
+    if not recipe.last_viewed or now - recipe.last_viewed > timedelta(hours=8):
+        recipe.view_count += 1
+        update_fields.append('view_count')
+    recipe.last_viewed = now
+    recipe.save(update_fields=update_fields)
 
     return render(request, 'recipe/view.html', {
         'recipe': recipe,
