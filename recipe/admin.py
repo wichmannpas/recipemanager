@@ -40,6 +40,10 @@ class IngredientAdmin(admin.ModelAdmin):
 class RecipeIngredientInline(admin.TabularInline):
     model = RecipeIngredient
 
+    autocomplete_fields = (
+        'ingredient',
+    )
+
 
 class RecipeInstanceInline(admin.TabularInline):
     model = RecipeInstance
