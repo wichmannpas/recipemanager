@@ -10,10 +10,16 @@ from .models import NUTRITIONAL, Recipe, RecipeIngredient, RecipeInstanceImage, 
 
 
 def list_recipes(request):
+    recipes = Recipe.objects.all()
+    tag_filter = request.GET.getlist('tags')
+    for tag in tag_filter:
+        recipes = recipes.filter(tags__name__iexact=tag)
+
+    recipes = recipes.order_by('-view_count', 'name').prefetch_related(
+        Prefetch('tags', Tag.objects.order_by('name'))
+    )
     return render(request, 'recipe/index.html', {
-        'recipes': Recipe.objects.order_by('-view_count', 'name').prefetch_related(
-            Prefetch('tags', Tag.objects.order_by('name'))
-        ),
+        'recipes': recipes,
     })
 
 
@@ -47,7 +53,8 @@ def view_recipe(request, pk: int):
         elif 'image_file' in request.FILES:
             try:
                 instance = get_object_or_404(recipe.instances,
-                                             pk=int(request.POST.get('recipe_instance_id', -1)))
+                                             pk=int(request.POST.get('recipe_instance_id',
+                                                                     -1)))
             except ValueError:
                 return HttpResponseBadRequest('invalid argument')
             RecipeInstanceImage.objects.create(
