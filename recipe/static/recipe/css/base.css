@@ -1,3 +1,11 @@
+.container {
+  margin-bottom: 3em !important;
+}
+
 .text-red {
   color: red !important;
+}
+
+.space-above {
+  margin-top: 1.5em;
 }

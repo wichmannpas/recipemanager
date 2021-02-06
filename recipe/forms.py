@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Recipe
+from .models import Recipe, RecipeInstance, RecipeInstanceImage
 
 
 class RecipeFactorForm(forms.ModelForm):
@@ -16,4 +16,13 @@ class RecipePortionsForm(forms.ModelForm):
         model = Recipe
         fields = (
             'portions',
+        )
+
+
+class RecipeInstanceForm(forms.ModelForm):
+    class Meta:
+        model = RecipeInstance
+        fields = (
+            'day',
+            'notes',
         )

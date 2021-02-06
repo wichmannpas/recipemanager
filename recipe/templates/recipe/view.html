@@ -116,4 +116,49 @@
       {% endif %}
     </tfoot>
   </table>
+
+  <h2 class="space-above">Verlauf</h2>
+  <form method="POST" action="{% url 'recipe:view_recipe' recipe.pk %}">
+    {% csrf_token %}
+    {% render_form new_instance_form %}
+    <button type="submit"
+            name="new-instance-form"
+            class="btn btn-primary btn-block">
+      Hinzufügen
+    </button>
+  </form>
+
+  {% for recipe_instance in recipe_instances %}
+    <h3>{{ recipe_instance.day|date }}</h3>
+
+    {% if recipe_instance.notes %}
+      <div>
+        {{ recipe_instance.notes|markdownify }}
+      </div>
+    {% endif %}
+
+    {% for image in recipe_instance.images.all %}
+      <img src="{{ image.image.url }}" style="max-height: 400px;" />
+    {% endfor %}
+
+    <form method="POST" enctype="multipart/form-data"
+          class="form-horizontal"
+          action="{% url 'recipe:view_recipe' recipe.pk %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <input type="hidden" name="recipe_instance_id"
+               value="{{ recipe_instance.pk }}" />
+        <div class="col-6">
+          <input type="file" name="image_file" class="form-input" />
+        </div>
+        <div class="col-6">
+          <button type="submit"
+                  name="new-image"
+                  class="btn btn-primary btn-block">
+            Hochladen
+          </button>
+        </div>
+      </div>
+    </form>
+  {% endfor %}
 {% endblock body %}
