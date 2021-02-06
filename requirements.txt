@@ -1,3 +1,4 @@
 Django<3.2
 django-markdownify
 django-spectre-css
+pillow

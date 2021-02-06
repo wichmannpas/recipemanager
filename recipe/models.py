@@ -1,6 +1,8 @@
 from datetime import date
 from decimal import Decimal
+from pathlib import Path
 from typing import Iterable
+from uuid import uuid4
 
 from django.db import models
 
@@ -56,6 +58,7 @@ class RecipeIngredient(models.Model):
         ordering = (
             'order_no',
         )
+
     recipe = models.ForeignKey(
         'Recipe', on_delete=models.CASCADE, related_name='recipe_ingredients')
     ingredient = models.ForeignKey(
@@ -72,6 +75,7 @@ class Recipe(models.Model):
         ordering = (
             '-view_count',
         )
+
     name = models.CharField(max_length=80)
     tags = models.ManyToManyField(Tag, related_name='recipes')
     ingredients = models.ManyToManyField(Ingredient, through=RecipeIngredient)
@@ -136,3 +140,22 @@ class RecipeInstance(models.Model):
         Recipe, on_delete=models.CASCADE, related_name='instances')
     day = models.DateField(default=date.today)
     notes = models.TextField(null=True, blank=True)
+
+    def __str__(self) -> str:
+        return '{} @ {}'.format(self.recipe, self.day)
+
+
+class RecipeInstanceImage(models.Model):
+    recipe_instance = models.ForeignKey(
+        RecipeInstance, on_delete=models.CASCADE, related_name='images')
+
+    def image_path(instance, filename) -> Path:
+        return (Path(
+            str(instance.recipe_instance.recipe_id)
+        ) / instance.recipe_instance.day.strftime('%Y%m%d') / str(uuid4())).with_suffix(
+            Path(filename).suffix)
+
+    image = models.ImageField(upload_to=image_path)
+
+    def __str__(self) -> str:
+        return str(self.recipe_instance)

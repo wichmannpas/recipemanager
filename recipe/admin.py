@@ -2,7 +2,8 @@ from django.contrib import admin, messages
 from django.db import transaction
 from django.db.models import Prefetch
 
-from recipe.models import Ingredient, Recipe, RecipeIngredient, RecipeInstance, Tag
+from recipe.models import Ingredient, Recipe, RecipeIngredient, RecipeInstance, \
+    RecipeInstanceImage, Tag
 
 admin.site.register(Tag)
 
@@ -20,7 +21,8 @@ class IngredientAdmin(admin.ModelAdmin):
     def merge_ingredients(self, request, queryset):
         if len(queryset) < 2:
             self.message_user(
-                request, 'At least two ingredients need to be selected!', messages.WARNING)
+                request, 'At least two ingredients need to be selected!',
+                messages.WARNING)
             return
         main = queryset.first()
         others = queryset[1:]
@@ -45,8 +47,19 @@ class RecipeIngredientInline(admin.TabularInline):
     )
 
 
-class RecipeInstanceInline(admin.TabularInline):
-    model = RecipeInstance
+class RecipeInstanceImageInline(admin.TabularInline):
+    model = RecipeInstanceImage
+
+
+@admin.register(RecipeInstance)
+class RecipeInstanceAdmin(admin.ModelAdmin):
+    list_display = (
+        'day',
+        'recipe',
+    )
+    inlines = (
+        RecipeInstanceImageInline,
+    )
 
 
 @admin.register(Recipe)
@@ -65,7 +78,6 @@ class RecipeAdmin(admin.ModelAdmin):
 
     inlines = (
         RecipeIngredientInline,
-        RecipeInstanceInline,
     )
 
     def get_queryset(self, request):
