@@ -44,7 +44,7 @@ def view_recipe(request, pk: int):
                 new_instance_form.instance.recipe = recipe
                 new_instance_form.save()
                 return redirect('recipe:view_recipe', recipe.pk)
-        elif 'new-image' in request.POST and 'image_file' in request.FILES:
+        elif 'image_file' in request.FILES:
             try:
                 instance = get_object_or_404(recipe.instances,
                                              pk=int(request.POST.get('recipe_instance_id', -1)))

@@ -148,10 +148,13 @@
       <div class="form-group">
         <input type="hidden" name="recipe_instance_id"
                value="{{ recipe_instance.pk }}" />
-        <div class="col-6">
-          <input type="file" name="image_file" class="form-input" />
+        <div class="col-10">
+          <input type="file"
+                 onchange="form.submit()"
+                 name="image_file"
+                 class="form-input" />
         </div>
-        <div class="col-6">
+        <div class="col-2">
           <button type="submit"
                   name="new-image"
                   class="btn btn-primary btn-block">
