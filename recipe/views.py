@@ -19,6 +19,7 @@ def list_recipes(request):
         Prefetch('tags', Tag.objects.order_by('name'))
     )
     return render(request, 'recipe/index.html', {
+        'tag_filter': tag_filter,
         'recipes': recipes,
     })
 

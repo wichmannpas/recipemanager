@@ -5,12 +5,24 @@
   <h1>
     Recipes
   </h1>
+  {% if tag_filter %}
+    Showing only:
+    {% for tag in tag_filter %}
+      <span class="chip"><a
+          href="{% url 'recipe:list_recipes' %}?tags={{ tag|urlencode }}">{{ tag }}</a>
+          </span>
+    {% endfor %}
+    <br />
+    <a href="{% url 'recipe:list_recipes' %}">Clear filter</a>
+  {% endif %}
   <ul>
     {% for recipe in recipes %}
       <li>
         <a href="{% url 'recipe:view_recipe' recipe.pk %}">{{ recipe.name }}</a>
         {% for tag in recipe.tags.all %}
-          <span class="chip">{{ tag }}</span>
+          <span class="chip"><a
+              href="{% url 'recipe:list_recipes' %}?tags={{ tag|urlencode }}">{{ tag }}</a>
+          </span>
         {% endfor %}
       </li>
     {% endfor %}
